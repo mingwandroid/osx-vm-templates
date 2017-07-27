@@ -1,0 +1,51 @@
+diff -urN vagrant-1.9.1.orig/lib/vagrant/util/ssh.rb vagrant-1.9.1/lib/vagrant/util/ssh.rb
+--- vagrant-1.9.1.orig/lib/vagrant/util/ssh.rb	2017-07-21 12:36:52.372814890 +0100
++++ vagrant-1.9.1/lib/vagrant/util/ssh.rb	2017-07-21 12:37:10.867391365 +0100
+@@ -109,7 +109,8 @@
+           "-p", options[:port].to_s,
+           "-o", "Compression=yes",
+           "-o", "DSAAuthentication=yes",
+-          "-o", "LogLevel=#{log_level}"]
++          "-o", "LogLevel=#{log_level}",
++          "-c", "aes256-ctr"]
+ 
+         # Solaris/OpenSolaris/Illumos uses SunSSH which doesn't support the
+         # IdentitiesOnly option. Also, we don't enable it in plain mode or if
+diff -urN vagrant-1.9.1.orig/plugins/communicators/ssh/communicator.rb vagrant-1.9.1/plugins/communicators/ssh/communicator.rb
+--- vagrant-1.9.1.orig/plugins/communicators/ssh/communicator.rb	2017-07-21 12:36:52.376815015 +0100
++++ vagrant-1.9.1/plugins/communicators/ssh/communicator.rb	2017-07-21 12:37:10.866391334 +0100
+@@ -332,6 +332,15 @@
+         auth_methods << "publickey" if ssh_info[:private_key_path]
+         auth_methods << "password" if ssh_info[:password]
+ 
++        # yanked directly from ruby's Net::SSH, but with `none` last
++        # TODO: Remove this once Vagrant has updated its dependency on Net:SSH
++        # to be > 4.1.0, which should include this fix.
++        cipher_array = Net::SSH::Transport::Algorithms::ALGORITHMS[:encryption].dup
++        if cipher_array.delete("none")
++          cipher_array.push("none")
++        end
++        cipher_array = ['aes256-ctr']
++
+         # Build the options we'll use to initiate the connection via Net::SSH
+         common_connect_opts = {
+           auth_methods:          auth_methods,
+@@ -345,6 +354,7 @@
+           timeout:               15,
+           user_known_hosts_file: [],
+           verbose:               :debug,
++          encryption:            cipher_array,
+         }
+ 
+         # Connect to SSH, giving it a few tries
+diff -urN vagrant-1.9.1.orig/plugins/synced_folders/rsync/helper.rb vagrant-1.9.1/plugins/synced_folders/rsync/helper.rb
+--- vagrant-1.9.1.orig/plugins/synced_folders/rsync/helper.rb	2017-07-21 12:36:52.393815545 +0100
++++ vagrant-1.9.1/plugins/synced_folders/rsync/helper.rb	2017-07-21 12:37:10.866391334 +0100
+@@ -88,6 +88,7 @@
+         rsh = [
+           "ssh", "-p", "#{ssh_info[:port]}",
+           "-o", "LogLevel=#{log_level}",
++          "-c", "aes256-ctr",
+           proxy_command,
+           control_options,
+         ]
