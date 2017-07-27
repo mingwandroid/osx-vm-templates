@@ -111,7 +111,7 @@
   "post-processors": [
     {
       "type": "vagrant",
-      "output": "{{user `vagrant_box_directory`}}/packer_{{.BuildName}}_{{.Provider}}.box"
+      "output": "{{user `vagrant_box_directory`}}/{{user `box_name`}}_{{.BuildName}}_{{.Provider}}.box"
     }
   ],
   "provisioners": [
@@ -170,6 +170,7 @@
     "puppet_agent_version": "none",
     "update_system": "true",
     "username": "vagrant",
-    "vagrant_box_directory": "{{env `PACKER_VAGRANT_BOX_DIR`}}"
+    "vagrant_box_directory": "{{env `PACKER_VAGRANT_BOX_DIR`}}",
+    "box_name": "packer"
   }
 }
