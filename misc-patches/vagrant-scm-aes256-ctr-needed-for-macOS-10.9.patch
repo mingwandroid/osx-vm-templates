@@ -1,0 +1,25 @@
+From 967931f6f9605e7dd220dab78c5ed201a8339f7e Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Mon, 31 Jul 2017 18:22:01 +0100
+Subject: [PATCH] Pass -c aes256-ctr to hack around macOS 10.9's lack of
+ ciphers
+
+---
+ lib/vagrant/scp/commands/scp.rb | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/lib/vagrant/scp/commands/scp.rb b/lib/vagrant/scp/commands/scp.rb
+index 83a54f0..8ff2929 100644
+--- a/lib/vagrant/scp/commands/scp.rb
++++ b/lib/vagrant/scp/commands/scp.rb
+@@ -37,6 +37,7 @@ module VagrantPlugins
+               "-o StrictHostKeyChecking=no",
+               "-o UserKnownHostsFile=/dev/null",
+               "-o port=#{@ssh_info[:port]}",
++              "-c aes256-ctr",
+               proxy_command,
+               "-i '#{@ssh_info[:private_key_path][0]}'",
+               source,
+-- 
+2.13.2
+
