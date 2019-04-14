@@ -12,7 +12,7 @@ if [ "$OSX_VERS" -ge 11 ]; then
     exit
 fi
 
-DMGURL=http://support.apple.com/downloads/DL1572/en_US/javaforosx.dmg
+DMGURL=https://updates.cdn-apple.com/2018/macos/031-33898-20171026-7a797e9e-b8de-11e7-b1fe-c14fbda7e146/javaforosx.dmg
 TOOLS=javaforosx.dmg
 curl "$DMGURL" -o "$TOOLS"
 TMPMOUNT=`/usr/bin/mktemp -d /tmp/javaforosx.XXXX`
