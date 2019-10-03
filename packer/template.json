@@ -82,7 +82,8 @@
         ["modifyvm", "{{.Name}}", "--memory", "2048"],
         ["modifyvm", "{{.Name}}", "--mouse", "usbtablet"],
         ["modifyvm", "{{.Name}}", "--vram", "128"],
-        ["storagectl", "{{.Name}}", "--name", "IDE Controller", "--remove"]
+        ["storagectl", "{{.Name}}", "--name", "IDE Controller", "--remove"],
+        ["modifyvm", "{{.Name}}", "--paravirtprovider", "none"]
       ]
     },
     {
