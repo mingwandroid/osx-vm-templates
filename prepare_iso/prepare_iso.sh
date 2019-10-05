@@ -247,7 +247,7 @@ if [ $DMG_OS_VERS_MAJOR -ge 9 ]; then
     BASESYSTEM_OUTPUT_IMAGE="$OUTPUT_DMG"
     PACKAGES_DIR="$MNT_BASE_SYSTEM/System/Installation/Packages"
 
-    rm "$PACKAGES_DIR"
+    rm -Rf "$PACKAGES_DIR"
 	msg_status "Moving 'Packages' directory from the ESD to BaseSystem.."
 	mv -v "$MNT_ESD/Packages" "$MNT_BASE_SYSTEM/System/Installation/"
 
